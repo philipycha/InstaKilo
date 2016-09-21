@@ -69,9 +69,31 @@
                             <outlet property="delegate" destination="x6u-r3-toC" id="sk7-ZU-TPm"/>
                         </connections>
                     </collectionView>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" id="1BW-LI-pqc">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="Gen-d9-c23"/>
+                        <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="SB7-AY-Mco">
+                            <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="3ul-e9-XDJ">
+                                <rect key="frame" x="16" y="7" width="150" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Location"/>
+                                    <segment title="Subject"/>
+                                </segments>
+                                <connections>
+                                    <action selector="segmentedSortPressed:" destination="x6u-r3-toC" eventType="valueChanged" id="Zav-WW-quP"/>
+                                </connections>
+                            </segmentedControl>
+                            <color key="tintColor" red="1" green="0.0" blue="0.060231345870000001" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="Gen-d9-c23">
+                            <color key="tintColor" red="1" green="0.0" blue="0.060231345870000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="pressedSortButton:" destination="x6u-r3-toC" id="P1B-Yg-YIp"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pK2-cp-ZLI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

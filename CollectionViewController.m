@@ -18,6 +18,9 @@
 @property (nonatomic) UICollectionViewFlowLayout                *compactLayout;
 @property (nonatomic) UICollectionViewFlowLayout                *largeLayout;
 
+-(void)sortBySubject;
+-(void)sortByLocation;
+
 @end
 
 
@@ -44,7 +47,7 @@
     
     
     self.compactLayout = [[UICollectionViewFlowLayout alloc] init];
-    self.compactLayout.itemSize = CGSizeMake(50, 50);
+    self.compactLayout.itemSize = CGSizeMake(75, 75);
     self.compactLayout.sectionInset = UIEdgeInsetsMake(5, 5, 5, 5);
     self.compactLayout.minimumLineSpacing = 5;
     self.compactLayout.minimumInteritemSpacing = 5;
@@ -267,6 +270,38 @@
     snapshot.layer.shadowOpacity = 0.7;
     
     return snapshot;
+    
+}
+
+- (IBAction)pressedSortButton:(UIBarButtonItem *)sender {
+    
+    
+    UICollectionViewLayout *nextLayout;
+    
+    if (self.collectionView.collectionViewLayout == self.largeLayout) {
+        nextLayout = self.compactLayout;
+    } else {
+        nextLayout = self.largeLayout;
+    }
+    
+    [self.collectionView.collectionViewLayout invalidateLayout];
+    [self.collectionView setCollectionViewLayout:nextLayout animated:YES];
+    
+    
+}
+
+- (IBAction)segmentedSortPressed:(UISegmentedControl *)sender {
+    
+    switch (sender.selectedSegmentIndex) {
+        case 0:
+            [self sortByLocation];
+            break;
+        case 1:
+            [self sortBySubject];
+            break;
+    }
+    [self.collectionView reloadData];
+    
     
 }
 

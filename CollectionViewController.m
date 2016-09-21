@@ -13,7 +13,7 @@
 
 @interface CollectionViewController () <UICollectionViewDataSource, UIScrollViewDelegate>
 
-@property (nonatomic, strong) NSMutableArray                    *photoArray;
+@property (nonatomic, strong) NSMutableArray <Photo*>           *photoArray;
 
 @property (nonatomic) UICollectionViewFlowLayout                *compactLayout;
 @property (nonatomic) UICollectionViewFlowLayout                *largeLayout;
@@ -42,7 +42,6 @@
     self.largeLayout.minimumLineSpacing = 10;
     self.largeLayout.headerReferenceSize = CGSizeMake(self.collectionView.frame.size.width, 50);
     
-    //    self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     
     self.compactLayout = [[UICollectionViewFlowLayout alloc] init];
     self.compactLayout.itemSize = CGSizeMake(50, 50);
@@ -50,7 +49,6 @@
     self.compactLayout.minimumLineSpacing = 5;
     self.compactLayout.minimumInteritemSpacing = 5;
     
-    //    self.smallLayout.headerReferenceSize = CGSizeMake(CGRectGetWidth(self.collectionView.frame), 25);
     
     self.collectionView.collectionViewLayout = self.largeLayout;
  
@@ -67,15 +65,32 @@
     
     self.photoArray = [[NSMutableArray alloc] initWithObjects:photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8, photo9, photo10, nil];
     
-      [self.collectionView reloadData];
     
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = NO;
+    [self.collectionView reloadData];
     
-    // Register cell classes
-//    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
+}
+
+-(void)sortByLocation{
     
-    // Do any additional setup after loading the view.
+    [self.photoArray sortUsingDescriptors:
+     @[
+       [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES],
+       [NSSortDescriptor sortDescriptorWithKey:@"subject" ascending:YES]
+       ]];
+    
+    [self.collectionView reloadData];
+}
+
+-(void)sortBySubject{
+    
+    [self.photoArray sortUsingDescriptors:
+     @[
+       [NSSortDescriptor sortDescriptorWithKey:@"subject" ascending:YES],
+       [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES]
+       ]];
+    
+    [self.collectionView reloadData];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -131,7 +146,8 @@
         
         HeaderCollectionReusableView *headerTitle = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"headerTitle" forIndexPath:indexPath];
         
-        headerTitle.headerLabel.text = [NSString stringWithFormat:@"%ld", (long)indexPath.item];
+        headerTitle.headerLabel.text = [NSString stringWithFormat:@"%@", self.photoArray[indexPath.item].location];
+                                        
         
         return headerTitle;
     }

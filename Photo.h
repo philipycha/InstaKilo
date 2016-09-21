@@ -7,10 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface Photo : NSObject
 
-@property (nonatomic, strong) NSString* location;
-@property (nonatomic, strong) NSString* subject;
+@property (nonatomic) NSString* location;
+@property (nonatomic) NSString* subject;
+@property (nonatomic) UIImage* image;
+
+- (instancetype)initWithImage:(UIImage*)image Location:(NSString*)location Subject:(NSString*)subject;
 
 @end

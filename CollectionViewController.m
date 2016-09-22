@@ -18,6 +18,27 @@
 @property (nonatomic) UICollectionViewFlowLayout                *compactLayout;
 @property (nonatomic) UICollectionViewFlowLayout                *largeLayout;
 
+@property (nonatomic) NSMutableSet                              *locationCategories;
+@property (nonatomic) NSMutableSet                              *subjectCategories;
+
+@property (nonatomic) NSArray                                   *locationArray;
+@property (nonatomic) NSArray                                   *subjectArray;
+
+@property (nonatomic) NSArray                            *locationKeyArray;
+@property (nonatomic) NSArray                            *subjectKeyArray;
+
+@property (nonatomic) NSMutableArray                            *nYArray;
+@property (nonatomic) NSMutableArray                            *uSAArray;
+
+@property (nonatomic) NSMutableArray                            *logoArray;
+@property (nonatomic) NSMutableArray                            *teamArray;
+
+@property (nonatomic) NSDictionary                              *locationDict;
+@property (nonatomic) NSDictionary                              *subjectDict;
+
+@property (nonatomic) int                                       selectedState;
+
+
 -(void)sortBySubject;
 -(void)sortByLocation;
 
@@ -29,7 +50,10 @@
 //static NSString * const reuseIdentifier = @"Cell";
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
+    
+    self.selectedState = 0;
     
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
                                                initWithTarget:self
@@ -71,6 +95,81 @@
     
     [self.collectionView reloadData];
     
+    self.locationCategories = [[NSMutableSet alloc] init];
+    self.subjectCategories = [[NSMutableSet alloc] init];
+    
+    for (Photo* photo in self.photoArray) {
+        
+        [self.locationCategories addObject:photo.location];
+    }
+    
+    
+    for (Photo* photo in self.photoArray) {
+        
+        [self.subjectCategories setByAddingObject:photo.subject];
+        
+    }
+    
+    
+    
+    self.nYArray = [[NSMutableArray alloc] init];
+    self.uSAArray = [[NSMutableArray alloc] init];
+    
+    //Make Array of Images for LOCATION: NEW YORK AND USA PHOTOS
+    
+    
+    //givea  number system to it.. because sets dont have orders ... but collectionview reuqires u to have ordered sections
+    self.locationArray = [self.locationCategories allObjects];
+    
+    
+    
+    
+    //we take the photos, and we segrate them into the different catorgeoires
+    for ( Photo *photo in _photoArray){
+        
+        if(photo.location == self.locationArray[0]){
+            
+            [_nYArray addObject:photo];
+            
+        } else if (photo.location == self.locationArray[1]){
+            
+            [_uSAArray addObject:photo];
+        }
+    }
+    
+
+    
+    self.logoArray = [[NSMutableArray alloc] init];
+    self.teamArray = [[NSMutableArray alloc] init];
+    
+    //Make Array of Images for SUBJECT: LOGO + TEAM
+    
+    self.subjectArray = [self.subjectCategories allObjects];
+    
+    for (Photo *logoPhoto in self.subjectArray) {
+        
+        [self.logoArray addObject:logoPhoto];
+        
+    }
+    
+    for (Photo *teamPhoto in self.subjectArray) {
+        
+        [self.teamArray addObject:teamPhoto];
+        
+    }
+
+    //MAKE DICTIONARY
+ 
+    self.locationDict = [[NSDictionary alloc] initWithObjectsAndKeys: self.nYArray, @"New York", self.uSAArray, @"USA",
+    nil];
+    
+    self.subjectDict = [[NSDictionary alloc] initWithObjectsAndKeys: self.teamArray, @"Team", self.logoArray, @"Logo", nil];
+    
+    self.locationKeyArray = [[NSArray alloc] init];
+    self.subjectKeyArray = [[NSArray alloc] init];
+    
+    self.locationKeyArray = [self.locationDict allKeys];
+    self.subjectKeyArray = [self.subjectDict allKeys];
 }
 
 -(void)sortByLocation{
@@ -115,31 +214,86 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     
-    return 1;
+    if (self.selectedState == 0){
+        
+        return self.locationKeyArray.count;
+        
+    } else {
+        
+        return self.subjectKeyArray.count;
+        
+    }
+    
     
 }
 
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-
-    return self.photoArray.count;
     
+    if (self.selectedState == 0){
+        
+        
+        NSString *key = _locationKeyArray[section];
+        
+        NSMutableArray *array = [_locationDict objectForKey:key];
+        
+        return array.count;
+        
+        
+        
+    } else {
+        
+        NSString *key = _subjectKeyArray[section];
+        
+        NSMutableArray *array = [_subjectDict objectForKey:key];
+        
+        return array.count;
+        
+        
     }
-
-
-
+    
+    
+}
+ 
+    
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     
-    Photo *photo = self.photoArray[indexPath.item];
+//    Photo *photo = self.photoArray[indexPath.item];
+//
+//    cell.cellImageView.image = photo.image;
+//    
+//    
+//    // Configure the cell
+//
+    
+    NSMutableArray *array = [[NSMutableArray alloc ] init];
+    
+    if (self.selectedState == 0){
+        
+        NSString *key = _locationKeyArray[indexPath.section];
+        
+        array = [_locationDict objectForKey:key];
+        
+        
+    } else {
+        
+        NSString *key = _subjectKeyArray[indexPath.section];
+        
+        array = [_subjectDict objectForKey:key];
+        
+    }
 
+    
+    Photo *photo = array[indexPath.item];
+    
     cell.cellImageView.image = photo.image;
     
-    
-    // Configure the cell
-    
     return cell;
+    
+    
+    
+    
 }
 
 -(UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(nonnull NSString *)kind atIndexPath:(nonnull NSIndexPath *)indexPath{
@@ -149,10 +303,18 @@
         
         HeaderCollectionReusableView *headerTitle = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"headerTitle" forIndexPath:indexPath];
         
-        headerTitle.headerLabel.text = [NSString stringWithFormat:@"%@", self.photoArray[indexPath.item].location];
-                                        
-        
+        if (self.selectedState == 0){
+            
+            headerTitle.headerLabel.text = [NSString stringWithFormat:@"%@", self.locationKeyArray[indexPath.section]];
+            
+        } else {
+            
+            headerTitle.headerLabel.text = [NSString stringWithFormat:@"%@", self.subjectKeyArray[indexPath.section]];
+            
+        }
+
         return headerTitle;
+        
     }
     
     return nil;
@@ -214,7 +376,7 @@
             if (indexPath && ![indexPath isEqual:sourceIndexPath]) {
                 
                 // ... update data source.
-                [self.photoArray exchangeObjectAtIndex:indexPath.row withObjectAtIndex:sourceIndexPath.row];
+                [self.photoArray exchangeObjectAtIndex:indexPath.item withObjectAtIndex:sourceIndexPath.item];
                 
                 // ... move the rows.
                 [self.collectionView moveItemAtIndexPath:sourceIndexPath toIndexPath:indexPath];
@@ -294,17 +456,22 @@
     
     switch (sender.selectedSegmentIndex) {
         case 0:
+            
             [self sortByLocation];
+            _selectedState = 0;
             break;
         case 1:
+            
             [self sortBySubject];
+            _selectedState = 1;
+            
             break;
     }
+    
     [self.collectionView reloadData];
     
     
 }
-
 
 #pragma mark <UICollectionViewDelegate>
 

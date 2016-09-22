@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[CollectionViewController collectionView:numberOfItemsInSection:]:CollectionViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_subjectDict">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CollectionViewController collectionView:cellForItemAtIndexPath:]:CollectionViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.subjectDict">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CollectionViewController viewDidLoad]:CollectionViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.locationCategories">
+            </PersistentString>
+            <PersistentString
+               value = "self.locationDict">
+            </PersistentString>
+            <PersistentString
+               value = "self.subjectDict">
+            </PersistentString>
+            <PersistentString
+               value = "self.subjectCategories">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CollectionViewController numberOfSectionsInCollectionView:]:CollectionViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[CollectionViewController segmentedSortPressed:]:CollectionViewController.m">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

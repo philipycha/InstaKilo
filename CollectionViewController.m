@@ -24,8 +24,8 @@
 @property (nonatomic) NSArray                                   *locationArray;
 @property (nonatomic) NSArray                                   *subjectArray;
 
-@property (nonatomic) NSArray                            *locationKeyArray;
-@property (nonatomic) NSArray                            *subjectKeyArray;
+@property (nonatomic) NSArray                                   *locationKeyArray;
+@property (nonatomic) NSArray                                   *subjectKeyArray;
 
 @property (nonatomic) NSMutableArray                            *nYArray;
 @property (nonatomic) NSMutableArray                            *uSAArray;
@@ -106,7 +106,7 @@
     
     for (Photo* photo in self.photoArray) {
         
-        [self.subjectCategories setByAddingObject:photo.subject];
+        [self.subjectCategories addObject:photo.subject];
         
     }
     
@@ -115,16 +115,22 @@
     self.nYArray = [[NSMutableArray alloc] init];
     self.uSAArray = [[NSMutableArray alloc] init];
     
+    
+    self.logoArray = [[NSMutableArray alloc] init];
+    self.teamArray = [[NSMutableArray alloc] init];
+    
     //Make Array of Images for LOCATION: NEW YORK AND USA PHOTOS
     
     
-    //givea  number system to it.. because sets dont have orders ... but collectionview reuqires u to have ordered sections
+    //give a number system to it.. because sets dont have orders ... but collectionview requires you to have ordered sections
+    
     self.locationArray = [self.locationCategories allObjects];
     
+    self.subjectArray = [self.subjectCategories allObjects];
     
     
+    //we take the photos, and we segregate them into the different categories
     
-    //we take the photos, and we segrate them into the different catorgeoires
     for ( Photo *photo in _photoArray){
         
         if(photo.location == self.locationArray[0]){
@@ -137,26 +143,23 @@
         }
     }
     
+    for ( Photo *photo in _photoArray){
+        
+        if(photo.subject == self.subjectArray[0]){
+            
+            [_teamArray addObject:photo];
+            
+        } else if (photo.subject == self.subjectArray[1]){
+            
+            [_logoArray addObject:photo];
+            
+        }
+    }
 
-    
-    self.logoArray = [[NSMutableArray alloc] init];
-    self.teamArray = [[NSMutableArray alloc] init];
     
     //Make Array of Images for SUBJECT: LOGO + TEAM
     
-    self.subjectArray = [self.subjectCategories allObjects];
-    
-    for (Photo *logoPhoto in self.subjectArray) {
-        
-        [self.logoArray addObject:logoPhoto];
-        
-    }
-    
-    for (Photo *teamPhoto in self.subjectArray) {
-        
-        [self.teamArray addObject:teamPhoto];
-        
-    }
+
 
     //MAKE DICTIONARY
  
@@ -259,14 +262,6 @@
     
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     
-//    Photo *photo = self.photoArray[indexPath.item];
-//
-//    cell.cellImageView.image = photo.image;
-//    
-//    
-//    // Configure the cell
-//
-    
     NSMutableArray *array = [[NSMutableArray alloc ] init];
     
     if (self.selectedState == 0){
@@ -284,7 +279,6 @@
         
     }
 
-    
     Photo *photo = array[indexPath.item];
     
     cell.cellImageView.image = photo.image;
@@ -455,11 +449,13 @@
 - (IBAction)segmentedSortPressed:(UISegmentedControl *)sender {
     
     switch (sender.selectedSegmentIndex) {
+            
         case 0:
             
             [self sortByLocation];
             _selectedState = 0;
             break;
+            
         case 1:
             
             [self sortBySubject];
